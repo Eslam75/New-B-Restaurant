@@ -12,9 +12,10 @@ import cartRouter from './src/Cart/cart.routes.js';
 import { wishRouter } from './src/wishList/wishList.routes.js';
 import bookTable from './src/BookTable/bookTable.routes.js';
 import orderRouter from './src/Order/order.routes.js';
+import path from 'path';
 
 dotenv.config();  // ✅ تحميل متغيرات البيئة أولًا
-
+const __dirname = path.resolve();
 const app = express();
 const server = http.createServer(app); 
 
