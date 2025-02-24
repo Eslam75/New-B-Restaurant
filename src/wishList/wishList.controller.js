@@ -8,9 +8,7 @@ export const addtowishlist = async (req, res) => {
     const { productId } = req.body;
     const currentUser = req.userId;
 
-    console.log(currentUser, "current user");
-    console.log(productId, "productId");
-
+   
     const payLoad = {
       userId: currentUser,
       productId: productId,
