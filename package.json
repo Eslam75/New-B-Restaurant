@@ -12,7 +12,7 @@
 
     "postinstall": "npm rebuild bcrypt --build-from-source",
 
-    "start": "node index.js",
+    "start": "npm install && node index.js",
 
     "dev": "nodemon index.js",
 
