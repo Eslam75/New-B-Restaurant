@@ -12,9 +12,9 @@
 
     "postinstall": "npm rebuild bcrypt --build-from-source",
 
-    "start": "node server.js",
+    "start": "node index.js",
 
-    "dev": "nodemon server.js",
+    "dev": "nodemon index.js",
 
     "test": "echo \"Error: no test specified\" && exit 1"
 
