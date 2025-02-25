@@ -13,7 +13,9 @@ import { wishRouter } from './src/wishList/wishList.routes.js';
 import bookTable from './src/BookTable/bookTable.routes.js';
 import orderRouter from './src/Order/order.routes.js';
 import path from 'path';
-
+import compression from 'compression';
+import cluster  from 'cluster';
+import os  from 'os';
 dotenv.config();  // ✅ تحميل متغيرات البيئة أولًا
 const __dirname = path.resolve();
 const app = express();
@@ -25,6 +27,7 @@ const io = new Server(server, {
     },
   });
 
+  app.use(compression());
 
 
   global.io = io; 
@@ -39,11 +42,16 @@ const onlineUsers = new Map();
 dbconnection();
 
 app.use(cookieParser());
-app.use(cors());
-
+app.use(cors({
+  origin: "*", 
+  credentials: true
+}));
 app.use("/images", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+
+app.use(express.static(path.join(__dirname, "FE", "build")));
 
 
 app.use(orderRouter);
@@ -67,6 +75,11 @@ app.use((err, req, res, next) => {
     });
 });
 
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "FE", "build", "index.html"));
+});
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -81,7 +94,15 @@ io.on("connection", (socket) => {
   });
 });
 
-// ✅ استخدم server.listen بدلاً من app.listen
-server.listen(process.env.PORT || 5000, () => 
+
+
+if (cluster.isMaster) {
+  for (let i = 0; i < os.cpus().length; i++) {
+    cluster.fork();
+  }
+} else {
+  server.listen(process.env.PORT || 5000, () => 
     console.log(`Server running on port ${process.env.PORT || 5000}`)
-);
+);}
+
+
