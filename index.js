@@ -14,8 +14,6 @@ import bookTable from './src/BookTable/bookTable.routes.js';
 import orderRouter from './src/Order/order.routes.js';
 import path from 'path';
 import compression from 'compression';
-import cluster  from 'cluster';
-import os  from 'os';
 dotenv.config();  // ✅ تحميل متغيرات البيئة أولًا
 const __dirname = path.resolve();
 const app = express();
@@ -94,15 +92,9 @@ io.on("connection", (socket) => {
   });
 });
 
+server.listen(process.env.PORT || 5000, () => 
+  console.log(`Server running on port ${process.env.PORT || 5000}`)
+)
 
-
-if (cluster.isMaster) {
-  for (let i = 0; i < os.cpus().length; i++) {
-    cluster.fork();
-  }
-} else {
-  server.listen(process.env.PORT || 5000, () => 
-    console.log(`Server running on port ${process.env.PORT || 5000}`)
-);}
 
 
